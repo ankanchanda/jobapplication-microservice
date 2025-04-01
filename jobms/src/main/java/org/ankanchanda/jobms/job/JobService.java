@@ -1,9 +1,10 @@
 package org.ankanchanda.jobms.job;
 
 import java.util.List;
+import org.ankanchanda.jobms.dto.JobWithCompanyDTO;
 
 public interface JobService {
-    List<Job> findAll();
+    List<JobWithCompanyDTO> findAll();
 
     Job findJobById(Long id);
 
