@@ -15,11 +15,12 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class JobServiceImpl implements JobService {
     private JobRepository jobRepository;
-    private RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate;
     private String companyServiceUrl = "http://localhost:8081/companies";
 
     public JobServiceImpl(JobRepository jobRepository) {
         this.jobRepository = jobRepository;
+        this.restTemplate = new RestTemplate();
     }
 
     @Override
