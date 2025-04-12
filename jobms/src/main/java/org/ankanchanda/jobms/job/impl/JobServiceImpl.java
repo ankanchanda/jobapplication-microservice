@@ -9,6 +9,7 @@ import org.ankanchanda.jobms.external.Company;
 import org.ankanchanda.jobms.job.Job;
 import org.ankanchanda.jobms.job.JobRepository;
 import org.ankanchanda.jobms.job.JobService;
+import org.ankanchanda.jobms.job.mapper.JobMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -78,9 +79,7 @@ public class JobServiceImpl implements JobService {
     private JobWithCompanyDTO geJobWithCompanyDTO(Job job) {
         Company company = restTemplate.getForObject(companyServiceUrl + String.format("/%d", job.getCompanyId()),
                 Company.class);
-        JobWithCompanyDTO dto = new JobWithCompanyDTO();
-        dto.setJob(job);
-        dto.setCompany(company);
+        JobWithCompanyDTO dto = JobMapper.mapToJobWithCompanyDTO(job, company);
         return dto;
     }
 }
