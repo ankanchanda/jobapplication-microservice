@@ -5,29 +5,23 @@ import org.ankanchanda.companyms.company.CompanyService;
 import org.ankanchanda.companyms.company.mapper.CompanyMapper;
 import org.ankanchanda.companyms.dto.CompanyWithReviewsDTO;
 import org.ankanchanda.companyms.external.Review;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Optional;
 
+import org.ankanchanda.companyms.clients.ReviewClient;
 import org.ankanchanda.companyms.company.Company;
 
 @Service
 public class CompanyServiceImpl implements CompanyService{
     private CompanyRepository companyRepository;
-    private final String reviewServiceURL = "http://REVIEWMS:8083/reviews";
-    @Autowired
-    RestTemplate restTemplate;
+    private ReviewClient reviewClient;
 
-    public CompanyServiceImpl(CompanyRepository companyRepository) {
+    public CompanyServiceImpl(CompanyRepository companyRepository, ReviewClient reviewClient) {
         this.companyRepository = companyRepository;
+        this.reviewClient = reviewClient;
     }
 
     @Override
@@ -74,16 +68,7 @@ public class CompanyServiceImpl implements CompanyService{
     }
 
     private  CompanyWithReviewsDTO getCompanyWithReviewsDTO(Company company) {
-        String urlWithParams = UriComponentsBuilder.fromUriString(reviewServiceURL)
-                .queryParam("companyId", company.getId())
-                .toUriString();
-        ResponseEntity<List<Review>> response = restTemplate.exchange(
-            urlWithParams,
-            HttpMethod.GET,
-            null,
-            new ParameterizedTypeReference<List<Review>>() {}
-        );
-        List<Review> reviews = response.getBody();
+        List<Review> reviews = reviewClient.getReviewsByCompanyId(company.getId());
         CompanyWithReviewsDTO dto = CompanyMapper.mapToCompanyWithReviewsDTO(company, reviews);
         return dto;
     } 

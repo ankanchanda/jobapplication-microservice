@@ -4,29 +4,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.ankanchanda.jobms.clients.CompanyClient;
 import org.ankanchanda.jobms.dto.JobWithCompanyDTO;
 import org.ankanchanda.jobms.external.Company;
 import org.ankanchanda.jobms.job.Job;
 import org.ankanchanda.jobms.job.JobRepository;
 import org.ankanchanda.jobms.job.JobService;
 import org.ankanchanda.jobms.job.mapper.JobMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class JobServiceImpl implements JobService {
     private JobRepository jobRepository;
-    // companyms registered with Eureka
-    // This is the URL of the company service. It is used to get the company details for a job.
-    private final String companyServiceUrl = "http://COMPANYMS:8081/companies";
+    private CompanyClient companyClient;
 
-    @Autowired
-    private RestTemplate restTemplate;
-
-
-    public JobServiceImpl(JobRepository jobRepository) {
+    public JobServiceImpl(JobRepository jobRepository, CompanyClient companyClient) {
         this.jobRepository = jobRepository;
+        this.companyClient = companyClient;
     }
 
     @Override
@@ -77,8 +71,7 @@ public class JobServiceImpl implements JobService {
     }
 
     private JobWithCompanyDTO geJobWithCompanyDTO(Job job) {
-        Company company = restTemplate.getForObject(companyServiceUrl + String.format("/%d", job.getCompanyId()),
-                Company.class);
+        Company company = companyClient.getCompany(job.getCompanyId());
         JobWithCompanyDTO dto = JobMapper.mapToJobWithCompanyDTO(job, company);
         return dto;
     }
