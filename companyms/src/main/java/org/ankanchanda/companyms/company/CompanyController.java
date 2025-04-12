@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import org.ankanchanda.companyms.dto.CompanyWithReviewsDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,13 +27,13 @@ public class CompanyController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Company>> findAll() {
+    public ResponseEntity<List<CompanyWithReviewsDTO>> findAll() {
         return ResponseEntity.ok(companyService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Company> getCompanyById(@PathVariable Long id) {
-        Company company = companyService.findCompanyById(id);
+    public ResponseEntity<CompanyWithReviewsDTO> getCompanyById(@PathVariable Long id) {
+        CompanyWithReviewsDTO company = companyService.findCompanyById(id);
         if (company == null) {
             return ResponseEntity.notFound().build();
         }

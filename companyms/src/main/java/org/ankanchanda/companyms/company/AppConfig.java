@@ -1,4 +1,4 @@
-package org.ankanchanda.reviewms.review;
+package org.ankanchanda.companyms.company;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;

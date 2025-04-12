@@ -2,10 +2,13 @@ package org.ankanchanda.companyms.company;
 
 import java.util.List;
 
-public interface CompanyService {
-    List<Company> findAll();
+import org.ankanchanda.companyms.dto.CompanyWithReviewsDTO;
 
-    Company findCompanyById(Long id);
+public interface CompanyService {
+
+    List<CompanyWithReviewsDTO> findAll();
+
+    CompanyWithReviewsDTO findCompanyById(Long id);
 
     void createCompany(Company company);
 
