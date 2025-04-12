@@ -9,18 +9,23 @@ import org.ankanchanda.jobms.external.Company;
 import org.ankanchanda.jobms.job.Job;
 import org.ankanchanda.jobms.job.JobRepository;
 import org.ankanchanda.jobms.job.JobService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
 public class JobServiceImpl implements JobService {
     private JobRepository jobRepository;
+    // companyms registered with Eureka
+    // This is the URL of the company service. It is used to get the company details for a job.
+    private final String companyServiceUrl = "http://COMPANYMS:8081/companies";
+
+    @Autowired
     private RestTemplate restTemplate;
-    private String companyServiceUrl = "http://localhost:8081/companies";
+
 
     public JobServiceImpl(JobRepository jobRepository) {
         this.jobRepository = jobRepository;
-        this.restTemplate = new RestTemplate();
     }
 
     @Override
@@ -33,8 +38,9 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public Job findJobById(Long id) {
-        return jobRepository.findById(id).orElse(null);
+    public JobWithCompanyDTO findJobById(Long id) {
+        Job job = jobRepository.findById(id).orElse(null);
+        return job != null ? geJobWithCompanyDTO(job) : null;
     }
 
     @Override

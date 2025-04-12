@@ -6,7 +6,7 @@ import org.ankanchanda.jobms.dto.JobWithCompanyDTO;
 public interface JobService {
     List<JobWithCompanyDTO> findAll();
 
-    Job findJobById(Long id);
+    JobWithCompanyDTO findJobById(Long id);
 
     void createJob(Job job);
 
